@@ -59,6 +59,17 @@ class SongAPI:
             songs = Song.query.all()    # read/extract all users from database
             json_ready = [song.read() for song in songs]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+
+
+    
+
+    class _DeleteSong(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
+        def get(self, id): # Create method
+            song = Song.query.filter_by(id=id).first()
+            song.delete()
+            
+            return {"message": "deleted"}
+
     
     class _Security(Resource):
 
@@ -83,5 +94,6 @@ class SongAPI:
             
 
     # building RESTapi endpoint
-    api.add_resource(_Song, '/test')
+    api.add_resource(_Song, '/')
+    api.add_resource(_DeleteSong, '/delete/<id>')
     
