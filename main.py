@@ -22,6 +22,23 @@ from api.song import song_api
 from projects.projects import app_projects # Blueprint directory import projects definition
 
 
+""" 
+JWT test
+""" 
+
+from flask import jsonify, request, make_response, redirect, session
+import jwt 
+import datetime 
+from functools import wraps
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
+from flask_session import Session 
+import os
+#from __init__ import ApplicationConfig
+
+""" 
+"""
+
+
 # Initialize the SQLAlchemy object to work with the Flask app instance
 db.init_app(app)
 
@@ -32,6 +49,25 @@ app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
 app.register_blueprint(app_projects) # register app pages
 app.register_blueprint(song_api) 
+
+
+""" 
+JWT test
+""" 
+
+
+app.config['SECRET_KEY'] = 'secretkey'
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+app.config['JWT_CSRF_CHECK_FORM'] = True
+
+jwt = JWTManager(app)
+
+
+""" 
+""" 
+
+
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
@@ -45,6 +81,21 @@ def index():
 @app.route('/table/')  # connects /stub/ URL to stub() function
 def table():
     return render_template("table.html")
+
+
+
+@app.route('/testing')
+def testing():
+    access_token = create_access_token(identity=str("usertest"))
+    refresh_token = create_refresh_token(identity=str("usertest"))
+    resp = make_response(redirect("http://swifties.duckdns.org/", 302))
+    set_access_cookies(resp, access_token)
+    set_refresh_cookies(resp, refresh_token)
+    return jsonify( {
+        "id": access_token
+    })
+
+
 
 @app.before_first_request
 def activate_job():  # activate these items 
