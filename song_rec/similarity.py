@@ -12,9 +12,9 @@ def cossim(A):
 # putting movies data on 'movies' dataframe
 # take genre, time signature, instrumentalness, key, explicit, duration, and album into account later
 songs = pd.read_csv('data.csv')
-features = songs[['popularity','danceability','energy','loudness','speechiness','acousticness','valence','tempo']].values.astype(np.float16)
+features = songs[['popularity','danceability','energy','loudness','speechiness','acousticness','valence','tempo']].values
 # features = songs[['popularity']].values
 print(features[:5,:])
 
-similarity_matrix = cosine_similarity(features)
-print(similarity_matrix[:5,:])
+similarity_matrix = cosine_similarity(features[:50000,:])
+print(similarity_matrix[:7,:10])
