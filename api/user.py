@@ -5,6 +5,28 @@ from datetime import datetime
 
 from model.users import User
 
+
+from __init__ import app,db  # Definitions initialization
+#db.init_app(app)
+
+from flask import jsonify, request, make_response
+import jwt 
+import datetime 
+from functools import wraps
+
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
+
+from flask_cors import CORS
+CORS(app)
+
+app.config['SECRET_KEY'] = 'secretkey'
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+app.config['JWT_CSRF_CHECK_FORM'] = True
+
+jwt = JWTManager(app)
+
+
 user_api = Blueprint('user_api', __name__,
                    url_prefix='/api/users')
 
@@ -79,9 +101,39 @@ class UserAPI:
             ''' authenticated user '''
             return jsonify(user.read())
 
+    class _Login(Resource):
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Get Data '''
+            username = body.get('username')
+            
+            
+            access_token = create_access_token(identity=str(username))
+
+            return jsonify( {
+                "id": access_token
+            })
+
+    class _Info(Resource):
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Get Data '''
+            token = body.get('token')
+            
+            decoded = decode_token(token)
+
+            return jsonify( 
+                decoded 
+            )
+
             
 
     # building RESTapi endpoint
     api.add_resource(_CRUD, '/')
     api.add_resource(_Security, '/authenticate')
-    
+    api.add_resource(_Login, '/login')
+    api.add_resource(_Info, '/info')  
