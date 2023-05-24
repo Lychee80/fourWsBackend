@@ -1,7 +1,7 @@
 version: '3'
 services:
         web:
-                image: fourWsFlask
+                image: four_ws_flask
                 build: .
                 ports:
                         - "8010:8086"
