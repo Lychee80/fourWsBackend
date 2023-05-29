@@ -1,0 +1,12 @@
+#!/bin/bash
+rev global | cut -d ',' -f 1 | rev > num
+cut -d '"' -f 2 num > num2
+sed 's/^/,/g' num2 > num3
+
+i=1
+while read line ; do
+	echo $line | sed "s/^/$i/g" >> num4
+	((i++))
+done < num3
+
+sed 's/^/1,/g' num4 > num5
