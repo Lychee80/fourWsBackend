@@ -1,12 +1,20 @@
 #!/bin/bash
+rm -rf num*
+
+
+echo "country num?"
+read countryNum
+echo "start num?"
+read start
+
 rev global | cut -d ',' -f 1 | rev > num
 cut -d '"' -f 2 num > num2
 sed 's/^/,/g' num2 > num3
 
-i=1
+
 while read line ; do
-	echo $line | sed "s/^/$i/g" >> num4
-	((i++))
+	echo $line | sed "s/^/$start/g" >> num4
+	((start++))
 done < num3
 
-sed 's/^/1,/g' num4 > num5
+sed "s/^/$countryNum,/g" num4 > num5
