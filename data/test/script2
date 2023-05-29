@@ -1,0 +1,15 @@
+#!/bin/bash 
+
+rm -rf global2
+rm -rf global3
+
+echo "start num?"
+read start
+
+
+sed "s/[0-9]*,//" global > global2
+
+while read line ; do
+	echo $line | sed "s/^/$start,/g" >> global3
+	((start++))
+done < global2

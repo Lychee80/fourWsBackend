@@ -16,5 +16,5 @@ venv.bak/
 volumes/sqlite.db
 #instance/volumes/sqlite.db
 
-data/test/global
+data/test/global*
 data/test/num*
