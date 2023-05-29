@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # train
     recommender.fit(country_songs)
     print("country songs: " + str(country_songs))
-    songs, scores = recommender.recommend(2, country_songs, 1)
+    songs, scores = recommender.recommend(2, country_songs, 3)
     
     for song, score in zip(songs, scores):
         print(f"{song}: {score}")

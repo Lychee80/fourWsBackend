@@ -12,7 +12,7 @@ class SongRetriever:
         
     # return artist's name from artist id
     def getSongNameFromId(self, songId):
-        return self._songs_df.loc[songId, "name"]
+        return self._songs_df.loc[songId, "track_name"]
 
     def loadSongs(self, songsFile):
         songs_df = pd.read_csv(songsFile, sep=",")
