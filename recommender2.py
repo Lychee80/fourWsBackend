@@ -26,19 +26,17 @@ class ImplicitRecommender:
         
         print(song_ids)
         print(scores)
-        """
         songs = [
             self.song_retriever.getSongNameFromId(song_id)
             for song_id in song_ids
         ]
-        """
-        # return songs, scores
-        return 1, 2
+        return songs, scores
 
 
 if __name__ == "__main__":
 
     country_songs = loadCountrySong("data/test/country_song.dat")
+    print("country_song: " + str(country_songs))
 
     song_retriever = SongRetriever()
     song_retriever.loadSongs("data/test/song.dat")
@@ -52,10 +50,8 @@ if __name__ == "__main__":
     recommender = ImplicitRecommender(song_retriever, implict_model)
     # train
     recommender.fit(country_songs)
-    print(recommender.recommend(1, country_songs, 1))
-    """
-    songs, scores = recommender.recommend(1, country_songs, 1)
+    print("country songs: " + str(country_songs))
+    songs, scores = recommender.recommend(2, country_songs, 1)
     
     for song, score in zip(songs, scores):
         print(f"{song}: {score}")
-    """
