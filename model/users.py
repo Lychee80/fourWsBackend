@@ -116,7 +116,7 @@ class User(db.Model):
     
     @property
     def password(self):
-        return self._password[0:10] + "..." # because of security only show 1st characters
+        return self._password # because of security only show 1st characters
 
     # update password, this is conventional setter
     def set_password(self, password):

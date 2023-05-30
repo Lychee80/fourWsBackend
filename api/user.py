@@ -16,6 +16,8 @@ from functools import wraps
 
 from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
 """ 
 recommender 
 """
@@ -112,15 +114,32 @@ class UserAPI:
             ''' authenticated user '''
             return jsonify(user.read())
 
-    class _Login(Resource):
+    class _Login(Resource): # This is currently broken; accepts any set of login credentials. Authentication function is in progress
         def post(self):
             ''' Read data for json body '''
             body = request.get_json()
             
             ''' Get Data '''
             username = body.get('username')
+            password = body.get('password')
             
             
+            dbUser = User.query.filter_by(_uid=username).first()
+
+            
+            if dbUser is None:
+                return {'message': f"Invalid user id"}, 400
+
+            
+            dbUsername = dbUser.uid
+            dbPassword = dbUser.password
+
+            if not check_password_hash(dbPassword, password):
+                return {'message': f"Invalid password"}, 400
+            
+
+
+
             access_token = create_access_token(identity=str(username))
 
             return jsonify( {
