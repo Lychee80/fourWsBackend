@@ -16,6 +16,15 @@ from functools import wraps
 
 from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
 
+""" 
+recommender 
+"""
+from recommender2 import ImplicitRecommender
+from data2 import loadCountrySong, SongRetriever
+import implicit
+import scipy
+
+
 from flask_cors import CORS
 CORS(app)
 
@@ -32,6 +41,8 @@ user_api = Blueprint('user_api', __name__,
 
 # API docs https://flask-restful.readthedocs.io/en/latest/api.html
 api = Api(user_api)
+
+
 
 class UserAPI:        
     class _CRUD(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
@@ -130,6 +141,43 @@ class UserAPI:
                 decoded 
             )
 
+    class _Recommender(Resource):
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Get Data '''
+            country = body.get('country')
+            
+            country_songs = loadCountrySong("data/test/country_song.dat")
+            print("country_song: " + str(country_songs))
+
+            song_retriever = SongRetriever()
+            song_retriever.loadSongs("data/test/song.dat")
+
+            # use alternating least squares
+            implict_model = implicit.als.AlternatingLeastSquares(
+                factors=50, iterations=10, regularization=0.01
+            )
+
+            
+            recommender = ImplicitRecommender(song_retriever, implict_model)
+            # train
+            recommender.fit(country_songs)
+            print("country songs: " + str(country_songs))
+            songs, scores = recommender.recommend(2, country_songs, 3)
+            
+            songReturn = {}
+            i = 0
+            for song, score in zip(songs, scores):
+                print(f"{song}: {score}")
+                songReturn[i] = song 
+                i += 1
+                
+            print(songReturn)
+
+            return jsonify(songReturn)
+
             
 
     # building RESTapi endpoint
@@ -137,3 +185,4 @@ class UserAPI:
     api.add_resource(_Security, '/authenticate')
     api.add_resource(_Login, '/login')
     api.add_resource(_Info, '/info')  
+    api.add_resource(_Recommender, '/recommender')  
