@@ -96,6 +96,11 @@ class UserAPI:
             users = User.query.all()    # read/extract all users from database
             json_ready = [user.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+
+    class _Userinfo(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
+        def get(self, username): # Read Method
+            user = User.query.filter_by(_uid=username).first()
+            return jsonify(user.read())  # jsonify creates Flask response object, more specific to APIs than json.dumps
     
     class _Security(Resource):
 
@@ -212,6 +217,7 @@ class UserAPI:
 
     # building RESTapi endpoint
     api.add_resource(_CRUD, '/')
+    api.add_resource(_Userinfo, '/<username>')
     api.add_resource(_Security, '/authenticate')
     api.add_resource(_Login, '/login')
     api.add_resource(_Info, '/info')  

@@ -180,6 +180,7 @@ class User(db.Model):
             "id": self.id,
             "name": self.name,
             "uid": self.uid,
+            "country": self.country,
             "dob": self.dob,
             "age": self.age,
             "posts": [post.read() for post in self.posts]
