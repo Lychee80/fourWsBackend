@@ -54,9 +54,9 @@ class UserAPI:
             
             ''' Avoid garbage in, error checking '''
             # validate name
-            name = body.get('name')
-            if name is None or len(name) < 2:
-                return {'message': f'Name is missing, or is less than 2 characters'}, 400
+            # name = body.get('name')
+            # if name is None or len(name) < 2:
+            #     return {'message': f'Name is missing, or is less than 2 characters'}, 400
             # validate uid
             uid = body.get('uid')
             if uid is None or len(uid) < 1:
@@ -68,8 +68,7 @@ class UserAPI:
             country = body.get('country')
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = User(name=name, 
-                      uid=uid)
+            uo = User(uid=uid)
             
             ''' Additional garbage error checking '''
             # set password if provided
