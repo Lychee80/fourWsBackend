@@ -11,7 +11,7 @@ from __init__ import app,db  # Definitions initialization
 
 from flask import jsonify, request, make_response
 import jwt 
-import datetime 
+# import datetime 
 from functools import wraps
 
 from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
@@ -65,6 +65,8 @@ class UserAPI:
             password = body.get('password')
             dob = body.get('dob')
 
+            country = body.get('country')
+
             ''' #1: Key code block, setup USER OBJECT '''
             uo = User(name=name, 
                       uid=uid)
@@ -79,6 +81,8 @@ class UserAPI:
                     uo.dob = datetime.strptime(dob, '%Y-%m-%d').date()
                 except:
                     return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 400
+            
+            uo.country = country
             
             ''' #2: Key Code block to add user to database '''
             # create user in database
@@ -167,6 +171,14 @@ class UserAPI:
             
             ''' Get Data '''
             country = body.get('country')
+
+            countryList = ["global", "us"]
+            countryNum = 0
+            for i in range(len(countryList)):
+                if country == countryList[i]:
+                    countryNum = i 
+            countryNum += 1
+                
             
             country_songs = loadCountrySong("data/test/country_song.dat")
             print("country_song: " + str(country_songs))
@@ -184,7 +196,7 @@ class UserAPI:
             # train
             recommender.fit(country_songs)
             print("country songs: " + str(country_songs))
-            songs, scores = recommender.recommend(2, country_songs, 3)
+            songs, scores = recommender.recommend(countryNum, country_songs, 3)
             
             songReturn = {}
             i = 0
