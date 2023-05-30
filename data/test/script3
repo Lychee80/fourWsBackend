@@ -1,0 +1,33 @@
+#!/bin/bash 
+
+rm -rf api2
+rm -rf api3
+rm -rf api4
+rm -rf api5
+rm -rf api6
+rm -rf api7
+rm -rf api8
+rm -rf api9
+
+
+cut -d '"' -f 2 api > api2
+sed "s/spotify:track://g" api2 > api3
+sed "s/^/https:\/\/open.spotify.com\/track\//g" api3 > api4
+sed "s/^/\"/g" api4 > api5
+sed "s/$/\"/g" api5 > api6
+
+echo "start num?"
+read start
+
+while read line ; do
+	echo $line | sed "s/^/$start: /g" >> api7
+	((start++))
+done < api6
+
+
+while read line ; do
+	echo $line | sed "s/$/,/g" >> api8
+	((start++))
+done < api7
+
+tr -d '\n' < api8 > api9

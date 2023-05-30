@@ -27,6 +27,9 @@ import implicit
 import scipy
 
 
+import ast
+
+
 from flask_cors import CORS
 CORS(app)
 
@@ -213,6 +216,16 @@ class UserAPI:
 
             return jsonify(songReturn)
 
+    class _Songlink(Resource):
+        def get(self):
+            myFile = open("data/test/songLink.txt", "r")
+            fileLine = myFile.readline()
+        
+            myFile.close()
+            
+            data = ast.literal_eval(fileLine)
+            
+            return data
             
 
     # building RESTapi endpoint
@@ -222,3 +235,4 @@ class UserAPI:
     api.add_resource(_Login, '/login')
     api.add_resource(_Info, '/info')  
     api.add_resource(_Recommender, '/recommender')  
+    api.add_resource(_Songlink, '/songlink')  
