@@ -182,7 +182,7 @@ class item_similarity_recommender_py():
         return df_recommendations
         
 
-def init(song):
+def init(songList):
     #Read userid-songid-listen_count triplets
     # triplets_file consists of "triplets" of data (user id, song id, listen count)
     triplets_file = "data/test2/10000.txt"
@@ -221,7 +221,7 @@ def init(song):
     # predict what song you would like based on a song that you input
     
     
-    df = is_model.get_similar_items([song])
+    df = is_model.get_similar_items(songList)
     #df = is_model.get_similar_items(['Silent Night - Faster Pussy cat'])
 
     #print(is_model.get_similar_items(['U Smile - Justin Bieber']))
@@ -232,7 +232,7 @@ def init(song):
     return df    
 
 if __name__ == "__main__":
-    init()
+    init(["Love Story - Taylor Swift", "Hey_ Soul Sister - Train"])
 
     
   
