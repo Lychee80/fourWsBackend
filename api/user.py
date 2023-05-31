@@ -206,16 +206,20 @@ class UserAPI:
             # train
             recommender.fit(country_songs)
             print("country songs: " + str(country_songs))
-            songs, scores = recommender.recommend(countryNum, country_songs, 3)
+            songs, scores, songId = recommender.recommend(countryNum, country_songs, 3)
+            
+            print("songId: " + str(songId))
             
             songReturn = {}
             i = 0
             for song, score in zip(songs, scores):
                 print(f"{song}: {score}")
-                songReturn[i] = song 
+                songInfo = {}
+                songInfo["id"] = int(songId[i])
+                songInfo["name"] = song 
+                songReturn[i] = songInfo 
                 i += 1
                 
-            print(songReturn)
 
             return jsonify(songReturn)
 
