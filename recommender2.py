@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # use alternating least squares
     implict_model = implicit.als.AlternatingLeastSquares(
-        factors=50, iterations=10, regularization=0.01
+        factors=50, iterations=10, regularization=0.01, random_state=42
     )
 
     
