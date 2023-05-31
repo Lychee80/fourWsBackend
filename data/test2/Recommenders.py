@@ -221,4 +221,10 @@ if __name__ == "__main__":
     is_model.create(train_data, 'user_id', 'song')
 
     # predict what song you would like based on a song that you input
-    print(is_model.get_similar_items(['U Smile - Justin Bieber']))
+    
+    
+    df = is_model.get_similar_items(['U Smile - Justin Bieber'])
+
+    #print(is_model.get_similar_items(['U Smile - Justin Bieber']))
+
+    print(df.loc[0]['song'])
