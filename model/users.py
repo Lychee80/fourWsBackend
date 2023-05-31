@@ -213,7 +213,7 @@ class Song(db.Model):
 
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
-    _uid = db.Column(db.String(255), unique=True, nullable=False)
+    _uid = db.Column(db.String(255), unique=False, nullable=False)
     _song = db.Column(db.String(255), unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
@@ -331,7 +331,7 @@ def initSongs():
         db.create_all()
         """Tester data for table"""
         s1 = Song(uid='a', song='Cupid')
-        s2 = Song(uid='b', song='Birds')
+        s2 = Song(uid='a', song='Birds')
         s3 = Song(uid='c', song='test')
         s4 = Song(uid='d', song='test2')
         s5 = Song(uid='e', song='test3')

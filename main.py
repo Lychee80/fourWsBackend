@@ -101,7 +101,7 @@ def testing():
 def activate_job():  # activate these items 
     initJokes()
     initUsers()
-    initSongs()
+    #initSongs()
     initPlayers()
 
 # this runs the application on the development server
@@ -109,5 +109,5 @@ if __name__ == "__main__":
     # change name for testing
     from flask_cors import CORS
     cors = CORS(app)
-    initSongs()
+    #initSongs()
     app.run(debug=True, host="0.0.0.0", port="8086")
