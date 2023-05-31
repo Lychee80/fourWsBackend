@@ -27,6 +27,9 @@ import implicit
 import scipy
 
 
+from Recommenders import init 
+
+
 import ast
 
 
@@ -226,6 +229,27 @@ class UserAPI:
             data = ast.literal_eval(fileLine)
             
             return data
+
+            
+    class _SongRecommender(Resource):
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Get Data '''
+            song = body.get('song')
+
+            df = init(song)
+            print(df.shape[0])
+            
+            returnSong = {}
+            
+            for i in range(df.shape[0]):
+                returnSong[i] = df.loc[i]['song']
+            
+            print(returnSong)
+
+            return jsonify(returnSong)
             
 
     # building RESTapi endpoint
@@ -235,4 +259,5 @@ class UserAPI:
     api.add_resource(_Login, '/login')
     api.add_resource(_Info, '/info')  
     api.add_resource(_Recommender, '/recommender')  
+    api.add_resource(_SongRecommender, '/songrec')  
     api.add_resource(_Songlink, '/songlink')  

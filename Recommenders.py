@@ -180,15 +180,13 @@ class item_similarity_recommender_py():
         df_recommendations = self.generate_top_recommendations(user, cooccurence_matrix, all_songs, user_songs)
          
         return df_recommendations
+        
 
-
-if __name__ == "__main__":
-
-    
+def init(song):
     #Read userid-songid-listen_count triplets
     # triplets_file consists of "triplets" of data (user id, song id, listen count)
-    triplets_file = "10000.txt"
-    songs_metadata_file = 'song_data.csv'
+    triplets_file = "data/test2/10000.txt"
+    songs_metadata_file = 'data/test2/song_data.csv'
 
     # read table and define columns
     song_df_1 = pandas.read_table(triplets_file,header=None)
@@ -223,8 +221,18 @@ if __name__ == "__main__":
     # predict what song you would like based on a song that you input
     
     
-    df = is_model.get_similar_items(['U Smile - Justin Bieber'])
+    df = is_model.get_similar_items([song])
+    #df = is_model.get_similar_items(['Silent Night - Faster Pussy cat'])
 
     #print(is_model.get_similar_items(['U Smile - Justin Bieber']))
 
     print(df.loc[0]['song'])
+    print(df)
+    
+    return df    
+
+if __name__ == "__main__":
+    init()
+
+    
+  
