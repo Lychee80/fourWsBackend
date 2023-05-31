@@ -19,3 +19,5 @@ volumes/sqlite.db
 data/test/global*
 data/test/num*
 data/test/api*
+
+data/test3/

@@ -1,48 +1,11 @@
 import numpy as np
 import pandas
+from sklearn.model_selection import train_test_split
+import numpy as np
+import time
+import joblib
 
-#Class for Popularity based Recommender System model
-class popularity_recommender_py():
-    def __init__(self):
-        self.train_data = None
-        self.user_id = None
-        self.item_id = None
-        self.popularity_recommendations = None
-        
-    #Create the popularity based recommender system model
-    def create(self, train_data, user_id, item_id):
-        self.train_data = train_data
-        self.user_id = user_id
-        self.item_id = item_id
 
-        #Get a count of user_ids for each unique song as recommendation score
-        # sort song based on recommendation score (which are the top listened songs for all users)
-        train_data_grouped = train_data.groupby([self.item_id]).agg({self.user_id: 'count'}).reset_index()
-        train_data_grouped.rename(columns = {'user_id': 'score'},inplace=True)
-    
-        #Sort the songs based upon recommendation score
-        train_data_sort = train_data_grouped.sort_values(['score', self.item_id], ascending = [0,1])
-    
-        #Generate a recommendation rank based upon score
-        train_data_sort['Rank'] = train_data_sort['score'].rank(ascending=0, method='first')
-        
-        #Get the top 10 recommendations
-        self.popularity_recommendations = train_data_sort.head(10)
-
-    #Use the popularity based recommender system model to
-    #make recommendations
-    def recommend(self, user_id):    
-        user_recommendations = self.popularity_recommendations
-        
-        #Add user_id column for which the recommendations are being generated
-        user_recommendations['user_id'] = user_id
-    
-        #Bring user_id column to the front
-        cols = user_recommendations.columns.tolist()
-        cols = cols[-1:] + cols[:-1]
-        user_recommendations = user_recommendations[cols]
-        
-        return user_recommendations
     
 
 #Class for Item similarity based Recommender System model
@@ -217,3 +180,45 @@ class item_similarity_recommender_py():
         df_recommendations = self.generate_top_recommendations(user, cooccurence_matrix, all_songs, user_songs)
          
         return df_recommendations
+
+
+if __name__ == "__main__":
+
+    
+    #Read userid-songid-listen_count triplets
+    # triplets_file consists of "triplets" of data (user id, song id, listen count)
+    triplets_file = "10000.txt"
+    songs_metadata_file = 'song_data.csv'
+
+    # read table and define columns
+    song_df_1 = pandas.read_table(triplets_file,header=None)
+    song_df_1.columns = ['user_id', 'song_id', 'listen_count']
+
+    # read song metadata
+    song_df_2 =  pandas.read_csv(songs_metadata_file)
+
+    # merge the two dataframes above to create input dataframe for recommender systems
+    # when two dataframes are merged, duplicate columns can arise
+    # drop the duplicate column of "song_id"
+    song_df = pandas.merge(song_df_1, song_df_2.drop_duplicates(['song_id']), on="song_id", how="left") 
+
+    # subset consists of first 10000 songs
+    song_df = song_df.head(10000)
+
+    # merge song title and artist_name columns to make a merged column
+    # because this recommender only recommends songs; we don't need artists
+    song_df['song'] = song_df['title'].map(str) + " - " + song_df['artist_name']
+
+    
+    # using scikit-learn to split data into training and testing data
+    # test_size = 0.20: Testing size is 20% => training size is 80%
+    train_data, test_data = train_test_split(song_df, test_size = 0.20, random_state=0)
+
+    
+    # make an item similarity recommender
+    is_model = item_similarity_recommender_py()
+    # create the recommender for a user
+    is_model.create(train_data, 'user_id', 'song')
+
+    # predict what song you would like based on a song that you input
+    print(is_model.get_similar_items(['U Smile - Justin Bieber']))
