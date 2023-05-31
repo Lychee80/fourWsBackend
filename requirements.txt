@@ -13,6 +13,6 @@ implicit
 flask_jwt_extended==4.4.4
 flask_session
 numpy
-scikit-learn==0.23.1
+#scikit-learn==0.23.1
 time 
 joblib
