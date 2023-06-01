@@ -242,8 +242,26 @@ class UserAPI:
             
             ''' Get Data '''
             song = body.get('song')
+            song2 = body.get('song2')
+            song3 = body.get('song3')
+            song4 = body.get('song4')
+            song5 = body.get('song5')
+            
+            songList = []
+            if song != None:
+                songList.append(song)
+            if song2 != "":
+                songList.append(song2)
+            if song3 != "":
+                songList.append(song3)
+            if song4 != "":
+                songList.append(song4)
+            if song5 != "":
+                songList.append(song5)
 
-            df = init(song)
+            print("songList: " + str(songList))
+
+            df = init([song])
             print(df.shape[0])
             
             returnSong = {}
