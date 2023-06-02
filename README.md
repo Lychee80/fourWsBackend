@@ -14,7 +14,9 @@ Application that recommends music through machine learning. Input songs you like
 
 4. **Geography Recommender:** User selects their country and will receive similar songs based on that.
 
-5. **Data Structures and Operations:** The project will leverage various data structures, such as an online database, to store geography information. CRUD operations (Create, Read, Update, Delete) will be implemented to manage user data. Sorting, data filtering, and query operations will be used to determine songs to recommend.
+5. **Quick Connection to Spotify:** User is able to login in to spotify and retrieve easy access to their playlists.
+
+6. **Data Structures and Operations:** The project will leverage various data structures, such as an online database, to store geography information. CRUD operations (Create, Read, Update, Delete) will be implemented to manage user data. Sorting, data filtering, and query operations will be used to determine songs to recommend.
 ## Technical Requirements
 
 The following technical components are necessary to implement the project effectively:
