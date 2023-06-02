@@ -36,7 +36,7 @@ class item_similarity_recommender_py():
     #Get unique items (songs) in the training data
     def get_all_items_train_data(self):
         all_items = list(self.train_data[self.item_id].unique())
-            
+
         return all_items
         
     #Construct cooccurence matrix
@@ -93,6 +93,7 @@ class item_similarity_recommender_py():
         
         #Calculate a weighted average of the scores in cooccurence matrix for all user songs.
         user_sim_scores = cooccurence_matrix.sum(axis=0)/float(cooccurence_matrix.shape[0])
+        
         user_sim_scores = np.array(user_sim_scores)[0].tolist()
  
         #Sort the indices of user_sim_scores based upon their value
@@ -203,9 +204,11 @@ def init(songList):
     # subset consists of first 10000 songs
     song_df = song_df.head(10000)
 
+
     # merge song title and artist_name columns to make a merged column
     # because this recommender only recommends songs; we don't need artists
     song_df['song'] = song_df['title'].map(str) + " - " + song_df['artist_name']
+
 
     
     # using scikit-learn to split data into training and testing data
@@ -232,7 +235,7 @@ def init(songList):
     return df    
 
 if __name__ == "__main__":
-    init(["Love Story - Taylor Swift", "Hey_ Soul Sister - Train"])
+    init(["Love Story - Taylor Swift", "Our Song - Taylor Swift", "The Outside - Taylor Swift"])
 
     
   

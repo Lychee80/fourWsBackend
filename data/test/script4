@@ -1,0 +1,16 @@
+#!/bin/bash
+
+rm -rf artist1
+rm -rf artist2
+rm -rf artist3
+rm -rf artist4
+
+sed "s/\t/,/g" artists.dat | cut -d ',' -f 1,2 | sed "s/,/: /g" > artist1
+
+sed -E "s/([0-9]*: )(.*)/\1\"\2\"/g" artist1 | sed "s/$/,/g" > artist2
+
+tr -d '\n' < artist2 > artist3
+
+
+
+# tr -d '\n' >
