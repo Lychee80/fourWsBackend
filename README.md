@@ -50,7 +50,10 @@ This command will compile the backend code and generate optimized static files i
 
 6. Build a local backend server:
 npm install -g serve
+
 serve -s build
+
+Alternatively, you can run main.py: `python3 main.py`
 
 7. Access the application:
 - http://localhost:5000 or the appropriate port number
