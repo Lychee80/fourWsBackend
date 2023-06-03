@@ -9,15 +9,13 @@ import joblib
     
 
 #Class for Item similarity based Recommender System model
-class item_similarity_recommender_py():
-    def __init__(self):
-        self.train_data = None
-        self.user_id = None
-        self.item_id = None
-        self.cooccurence_matrix = None
-        self.songs_dict = None
-        self.rev_songs_dict = None
-        self.item_similarity_recommendations = None
+class item_similarity_recommender_py:
+    #Create the item similarity based recommender system model
+    def __init__(self, train_data, user_id, item_id):
+        self.train_data = train_data
+        self.user_id = user_id
+        self.item_id = item_id
+  
         
     #Get unique items (songs) corresponding to a given user
     def get_user_items(self, user):
@@ -119,11 +117,7 @@ class item_similarity_recommender_py():
         else:
             return df
  
-    #Create the item similarity based recommender system model
-    def create(self, train_data, user_id, item_id):
-        self.train_data = train_data
-        self.user_id = user_id
-        self.item_id = item_id
+
 
     #Use the item similarity based recommender system model to
     #make recommendations
@@ -184,8 +178,7 @@ class item_similarity_recommender_py():
         
 
 def init(songList):
-    #Read userid-songid-listen_count triplets
-    # triplets_file consists of "triplets" of data (user id, song id, listen count)
+    # triplets_file consists of a "triplet" of data (user id, song id, listen count)
     triplets_file = "data/test2/10000.txt"
     songs_metadata_file = 'data/test2/song_data.csv'
 
@@ -195,19 +188,24 @@ def init(songList):
 
     # read song metadata
     song_df_2 =  pandas.read_csv(songs_metadata_file)
+    # clean data to remove rows with duplicate songs
+    song_df_2 = song_df_2.drop_duplicates(['song_id'])
+
 
     # merge the two dataframes above to create input dataframe for recommender systems
-    # when two dataframes are merged, duplicate columns can arise
-    # drop the duplicate column of "song_id"
-    song_df = pandas.merge(song_df_1, song_df_2.drop_duplicates(['song_id']), on="song_id", how="left") 
+    # keep the triplet data's song id, drop the duplicate column of "song_id" in the song data's file
+    song_df = pandas.merge(song_df_1, song_df_2, on="song_id", how="left") 
 
     # subset consists of first 10000 songs
     song_df = song_df.head(10000)
 
+    
+    song_df['song'] = song_df['title'].map(str) 
 
+    # alternatively, you can: 
     # merge song title and artist_name columns to make a merged column
     # because this recommender only recommends songs; we don't need artists
-    song_df['song'] = song_df['title'].map(str) + " - " + song_df['artist_name']
+    #song_df['song'] = song_df['title'].map(str) + " - " + song_df['artist_name']
 
 
     
@@ -217,17 +215,10 @@ def init(songList):
 
     
     # make an item similarity recommender
-    is_model = item_similarity_recommender_py()
-    # create the recommender for a user
-    is_model.create(train_data, 'user_id', 'song')
+    is_model = item_similarity_recommender_py(train_data, "user_id", "song")
 
     # predict what song you would like based on a song that you input
-    
-    
     df = is_model.get_similar_items(songList)
-    #df = is_model.get_similar_items(['Silent Night - Faster Pussy cat'])
-
-    #print(is_model.get_similar_items(['U Smile - Justin Bieber']))
 
     print(df.loc[0]['song'])
     print(df)
@@ -235,7 +226,7 @@ def init(songList):
     return df    
 
 if __name__ == "__main__":
-    init(["Love Story - Taylor Swift", "Our Song - Taylor Swift", "The Outside - Taylor Swift"])
+    init(["Love Story"])
 
     
   
