@@ -30,8 +30,8 @@ class item_similarity_recommender_py:
         item_users = set(item_data[self.user_id].unique())
             
         return item_users
-        
-    #Get unique items (songs) in the training data
+    
+    # Obtain unique songs in the training data
     def get_all_items_train_data(self):
         all_items = list(self.train_data[self.item_id].unique())
 
@@ -150,29 +150,20 @@ class item_similarity_recommender_py:
                 
         return df_recommendations
     
-    #Get similar items to given items
-    def get_similar_items(self, item_list):
+    # Get similar songs to those that the user inputs
+    def get_similar_items(self, inputSong):
         
-        user_songs = item_list
-        
-        ######################################################
-        #B. Get all unique items (songs) in the training data
-        ######################################################
+        # Obtain unique songs in the training data
         all_songs = self.get_all_items_train_data()
         
         print("no. of unique songs in the training set: %d" % len(all_songs))
          
-        ###############################################
-        #C. Construct item cooccurence matrix of size 
-        #len(user_songs) X len(songs)
-        ###############################################
-        cooccurence_matrix = self.construct_cooccurence_matrix(user_songs, all_songs)
+        # Make a cooccurence matrix
+        cooccurence_matrix = self.construct_cooccurence_matrix(inputSong, all_songs)
         
-        #######################################################
-        #D. Use the cooccurence matrix to make recommendations
-        #######################################################
+        # Use cooccurence matrix to generate recommendations 
         user = ""
-        df_recommendations = self.generate_top_recommendations(user, cooccurence_matrix, all_songs, user_songs)
+        df_recommendations = self.generate_top_recommendations(user, cooccurence_matrix, all_songs, inputSong)
          
         return df_recommendations
         
