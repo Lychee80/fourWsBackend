@@ -74,34 +74,32 @@ class item_similarity_recommender_py:
         return cooccurence_matrix
 
     
-    #Use the cooccurence matrix to make top recommendations
-    def generate_top_recommendations(self, user, cooccurence_matrix, all_songs, user_songs):
+    # Use cooccurence matrix to generate recommendations 
+    def generate_top_recommendations(self, user, cooccurence_matrix, all_songs, inputSong):
         print("Non zero values in cooccurence_matrix :%d" % np.count_nonzero(cooccurence_matrix))
         
-        # cooccurence matrix of songs is created
         
-        #Calculate a weighted average of the scores in cooccurence matrix for all user songs.
+        # Calculate a recommendation score
         user_sim_scores = cooccurence_matrix.sum(axis=0)/float(cooccurence_matrix.shape[0])
         
         user_sim_scores = np.array(user_sim_scores)[0].tolist()
  
-        #Sort the indices of user_sim_scores based upon their value
-        #Also maintain the corresponding score
+        # Sort the scores from highest to lowest
         sort_index = sorted(((e,i) for i,e in enumerate(list(user_sim_scores))), reverse=True)
     
-        #Create a dataframe from the following
+        # Make a new dataframe
         columns = ['user_id', 'song', 'score', 'rank']
-        #index = np.arange(1) # array of numbers for the number of samples
         df = pandas.DataFrame(columns=columns)
          
-        #Fill the dataframe with top 10 item based recommendations
+        # Add top 10 highest scores to dataframe
         rank = 1 
-        for i in range(0,len(sort_index)):
-            if ~np.isnan(sort_index[i][0]) and all_songs[sort_index[i][1]] not in user_songs and rank <= 10:
+        print(sort_index)
+        for i in range(len(sort_index)):
+            if ~np.isnan(sort_index[i][0]) and all_songs[sort_index[i][1]] not in inputSong and rank <= 10:
                 df.loc[len(df)]=[user,all_songs[sort_index[i][1]],sort_index[i][0],rank]
-                rank = rank+1
+                rank += 1
         
-        #Handle the case where there are no recommendations
+        # Error checking
         if df.shape[0] == 0:
             print("The current user has no songs for training the item similarity based recommendation model.")
             return -1
@@ -110,36 +108,6 @@ class item_similarity_recommender_py:
  
 
 
-    #Use the item similarity based recommender system model to
-    #make recommendations
-    def recommend(self, user):
-        
-        ########################################
-        #A. Get all unique songs for this user
-        ########################################
-        user_songs = self.get_user_items(user)    
-            
-        print("No. of unique songs for the user: %d" % len(user_songs))
-        
-        ######################################################
-        #B. Get all unique items (songs) in the training data
-        ######################################################
-        all_songs = self.get_all_items_train_data()
-        
-        print("no. of unique songs in the training set: %d" % len(all_songs))
-         
-        ###############################################
-        #C. Construct item cooccurence matrix of size 
-        #len(user_songs) X len(songs)
-        ###############################################
-        cooccurence_matrix = self.construct_cooccurence_matrix(user_songs, all_songs)
-        
-        #######################################################
-        #D. Use the cooccurence matrix to make recommendations
-        #######################################################
-        df_recommendations = self.generate_top_recommendations(user, cooccurence_matrix, all_songs, user_songs)
-                
-        return df_recommendations
     
     # Get similar songs to those that the user inputs
     def get_similar_items(self, inputSong):
