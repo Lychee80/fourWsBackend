@@ -42,35 +42,28 @@ class item_similarity_recommender_py:
             
         # Obtain the user IDs of those who ranked songs that are the same as the songs that the user inputted 
         user_songs_users = []        
-        for i in range(0, len(inputSong)):
+        for i in range(len(inputSong)):
             user_songs_users.append(self.get_item_users(inputSong[i]))
             
-        ###############################################
-        #Initialize the item cooccurence matrix of size 
-        #len(user_songs) X len(songs)
-        ###############################################
+        # Make a cooccurence matrix 
         cooccurence_matrix = np.matrix(np.zeros(shape=(len(inputSong), len(all_songs))), float)
            
-        #############################################################
-        #Calculate similarity between user songs and all unique songs
-        #in the training data
-        #############################################################
-        for i in range(0,len(all_songs)):
-            #Calculate unique listeners (users) of song (item) i
+        # Calculate similarity 
+        for i in range(len(all_songs)):
+            # Obtain a set of unique user IDs of those who listened to a song (song refers to the list of unique values in the training data under the song column)
             songs_i_data = self.train_data[self.train_data[self.item_id] == all_songs[i]]
             users_i = set(songs_i_data[self.user_id].unique())
             
-            for j in range(0,len(inputSong)):       
+            for j in range(len(inputSong)):       
                     
-                #Get unique listeners (users) of song (item) j
+                # Take a user ID from user_songs_users
                 users_j = user_songs_users[j]
                     
-                #Calculate intersection of listeners of songs i and j
+                # Compare the user ID from user_songs_users with the user IDs in the set
                 users_intersection = users_i.intersection(users_j)
                 
-                #Calculate cooccurence_matrix[i,j] as Jaccard Index
                 if len(users_intersection) != 0:
-                    #Calculate union of listeners of songs i and j
+                    # Find the union of the two user IDs
                     users_union = users_i.union(users_j)
                     
                     cooccurence_matrix[j,i] = float(len(users_intersection))/float(len(users_union))
