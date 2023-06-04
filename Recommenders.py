@@ -37,21 +37,19 @@ class item_similarity_recommender_py:
 
         return all_items
         
-    #Construct cooccurence matrix
-    def construct_cooccurence_matrix(self, user_songs, all_songs):
+    # Make a coocurrence matrix
+    def construct_cooccurence_matrix(self, inputSong, all_songs):
             
-        ####################################
-        #Get users for all songs in user_songs.
-        ####################################
+        # Obtain the user IDs of those who ranked songs that are the same as the songs that the user inputted 
         user_songs_users = []        
-        for i in range(0, len(user_songs)):
-            user_songs_users.append(self.get_item_users(user_songs[i]))
+        for i in range(0, len(inputSong)):
+            user_songs_users.append(self.get_item_users(inputSong[i]))
             
         ###############################################
         #Initialize the item cooccurence matrix of size 
         #len(user_songs) X len(songs)
         ###############################################
-        cooccurence_matrix = np.matrix(np.zeros(shape=(len(user_songs), len(all_songs))), float)
+        cooccurence_matrix = np.matrix(np.zeros(shape=(len(inputSong), len(all_songs))), float)
            
         #############################################################
         #Calculate similarity between user songs and all unique songs
@@ -62,7 +60,7 @@ class item_similarity_recommender_py:
             songs_i_data = self.train_data[self.train_data[self.item_id] == all_songs[i]]
             users_i = set(songs_i_data[self.user_id].unique())
             
-            for j in range(0,len(user_songs)):       
+            for j in range(0,len(inputSong)):       
                     
                 #Get unique listeners (users) of song (item) j
                 users_j = user_songs_users[j]
@@ -168,7 +166,7 @@ class item_similarity_recommender_py:
         return df_recommendations
         
 
-def init(songList):
+def init(inputSong):
     # triplets_file consists of a "triplet" of data (user id, song id, listen count)
     triplets_file = "data/test2/10000.txt"
     songs_metadata_file = 'data/test2/song_data.csv'
@@ -209,7 +207,7 @@ def init(songList):
     is_model = item_similarity_recommender_py(train_data, "user_id", "song")
 
     # predict what song you would like based on a song that you input
-    df = is_model.get_similar_items(songList)
+    df = is_model.get_similar_items(inputSong)
 
     print(df.loc[0]['song'])
     print(df)
