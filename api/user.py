@@ -28,6 +28,7 @@ import scipy
 
 
 from Recommenders import init 
+from contentrec import generate_recommendation
 
 
 import ast
@@ -270,7 +271,24 @@ class UserAPI:
                 returnSong[i] = df.loc[i]['song']
             
             print(returnSong)
-
+            # see if content based has song if collaborative doesn't
+            if returnSong[0] == 'The Carpal Tunnel Of Love' and returnSong[9] == 'This Lullaby':
+                try:
+                    ret = {}
+                    songs = []
+                    print(songList)
+                    for i in range(len(songList)):
+                        songs += generate_recommendation(songList[i],10//len(songList))
+                        print(songs)
+                    if len(songs) != 10:
+                        songs += generate_recommendation(song,10-len(songs))
+                    print(songs)
+                    for i in range(len(songs)):
+                        ret[i] = songs[i]
+                    print(ret)
+                    return jsonify(ret)
+                except:
+                    pass
             return jsonify(returnSong)
             
 
