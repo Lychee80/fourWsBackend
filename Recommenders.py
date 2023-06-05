@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import time
 import joblib
+import time
 
 
     
@@ -93,7 +94,6 @@ class item_similarity_recommender_py:
          
         # Add top 10 highest scores to dataframe
         rank = 1 
-        print(sort_index)
         for i in range(len(sort_index)):
             if ~np.isnan(sort_index[i][0]) and all_songs[sort_index[i][1]] not in inputSong and rank <= 10:
                 df.loc[len(df)]=[user,all_songs[sort_index[i][1]],sort_index[i][0],rank]
@@ -147,7 +147,7 @@ def init(inputSong):
     song_df = pandas.merge(song_df_1, song_df_2, on="song_id", how="left") 
 
     # subset consists of first 10000 songs
-    song_df = song_df.head(10000)
+    song_df = song_df.head(150000)
 
     
     song_df['song'] = song_df['title'].map(str) 
@@ -176,7 +176,11 @@ def init(inputSong):
     return df    
 
 if __name__ == "__main__":
+    # record time
+    startTime = time.time()
     init(["Love Story"])
+    print("Total time elapsed: " + str(time.time() - startTime))
+    
 
     
   
